@@ -8,7 +8,6 @@ app.use(express.json())
 
 app.get('/', (_, res) => res.send('Server working.'))
 app.post('/form', (req, res) => {
-  const 
   const { name, email, cellphone, messsage } = req.body
   res.json({ success: true })
 })
