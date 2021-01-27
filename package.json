@@ -1,0 +1,29 @@
+{
+  "name": "ced-bot",
+  "version": "1.0.0",
+  "description": "A telegram bot api",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "telegraf": "^4.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manamelacedric/ced-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manamelacedric/ced-bot/issues"
+  },
+  "homepage": "https://github.com/manamelacedric/ced-bot#readme",
+  "engines": {
+    "node": "12.x"
+  }
+}
