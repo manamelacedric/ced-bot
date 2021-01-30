@@ -11,6 +11,11 @@ const httpCodes = {
   serverErr: 500,
 }
 
+const origins = {
+  dev: 'http://localhost:5500',
+  prod: 'https://manamelacedric.github.io'
+}
+
 const app = express()
 
 app.use(express.json())
@@ -19,6 +24,15 @@ app.use(helmet())
 app.disable("x-powered-by")
 
 app.get('/', (_, res) => res.send('Server working.'))
+app.options('/', (_, res) => {
+  const headers = {
+    'Access-Control-Allow-Origin': origins[process.env.NODE_ENV],
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type, Credentials, x',
+    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET'
+  }
+  return res.set(headers).json({ success: true })
+})
 
 // auth middleware
 app.use((req, res, next) => {
@@ -47,6 +61,7 @@ app.use((req, _, next) => {
 app.post('/', (req, res) => {
   const { name, email, cellphone, message } = req.body
   const chatId = process.env.ID
+  console.log(JSON.stringify(req.body))
 
   if (!name) {
     return res.status(httpCodes.badReq).json({
