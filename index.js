@@ -1,6 +1,9 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
+const helmet = require("helmet")
 const bot = require('./bot')
+
 const httpCodes = {
   ok: 200,
   badReq: 400,
@@ -8,10 +11,12 @@ const httpCodes = {
   serverErr: 500,
 }
 
-
 const app = express()
 
 app.use(express.json())
+app.use(cors())
+app.use(helmet())
+app.disable("x-powered-by")
 
 app.get('/', (_, res) => res.send('Server working.'))
 
@@ -51,13 +56,13 @@ app.post('/', (req, res) => {
 
   if (!cellphone) {
     return res.status(httpCodes.badReq).json({
-      success: false, error: { message: 'please specify your number'}
+      success: false, error: { message: 'please specify your cellphone number'}
     })
   }
 
   if (!email) {
     return res.status(httpCodes.badReq).json({
-      success: false, error: { message: 'please specify your email'}
+      success: false, error: { message: 'please specify your email address'}
     })
   }
 
@@ -67,20 +72,27 @@ app.post('/', (req, res) => {
     })
   }
 
-  // todo: fix the order
-  const messages = [
-    bot.telegram.sendMessage(chatId, 'New Form Submission'),
-    bot.telegram.sendMessage(chatId, `Name: ${name}`),
-    bot.telegram.sendMessage(chatId, `Contacts: ${cellphone} ${email}`),
-    bot.telegram.sendMessage(chatId, `Message: ${message}`),
-  ]
-  Promise.all(messages)
-    .then(() => res.json({ success: true }))
+  const newMessage = '<u><b>New Form Submission</b></u>'.concat([
+    `\n<b>Name</b> <code>${name}</code>`,
+    `\n<b>Cellphone</b> <code>${cellphone}</code>`,
+    `\n<b>Email</b> <code>${cellphone}</code>`,
+    `\n<b>Message</b> <code>${message}</code>`,
+  ])
+  
+  bot.telegram.sendMessage(chatId, newMessage, { parse_mode: 'HTML'})
+    .then(() => res.json({ success: true, data: { message: 'Message sent successfully.' } }))
     .catch((err) => {
       console.log('SendMessage Error: ', err)
-      res.status(httpCodes.serverErr).json({ success: true })
+      res.status(httpCodes.serverErr).json({
+        success: false,
+        error: { message: 'An unexpected error occured while sending your message, please try again later.' }
+      })
     })
-  
+})
+
+// 404 handler
+app.use((req, res, next) => {
+  res.status(404).send("Sorry, The resource you are looking for cannot be found!")
 })
 
 // start server

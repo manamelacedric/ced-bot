@@ -4,8 +4,10 @@
   "description": "A telegram bot api",
   "main": "index.js",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "helmet": "^4.4.1",
     "telegraf": "^4.0.1"
   },
   "devDependencies": {},
