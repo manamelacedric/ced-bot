@@ -12,7 +12,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node index.js"
+    "start": "node --trace-warnings index.js"
   },
   "repository": {
     "type": "git",
